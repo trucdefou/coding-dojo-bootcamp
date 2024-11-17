@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-def get_nulll_data_info(df):
+def get_nulll_data_info(df): #obtiene los datos nulos en el dataset
     qsna = df.shape[0] - df.isnull().sum(axis=0)
     qna = df.isnull().sum(axis=0)
     ppna = round(100 * (df.isnull().sum(axis=0) / df.shape[0]), 2)
@@ -12,14 +12,14 @@ def get_nulll_data_info(df):
 
     return na.sort_values(by='Na en %', ascending=False)
 
-def get_numeric_columns(df):
+def get_numeric_columns(df): #retorna columnas numericas
     return df.select_dtypes(include=[np.number]).columns.tolist()
 
 
-def get_categoric_columns(df):
+def get_categoric_columns(df): #retorna columnas categoricas (basado en su tipo)
     return df.select_dtypes(include=['string', 'object', 'category']).columns.tolist()
 
-def normalize_string(input_string):
+def normalize_string(input_string): #normaliza strings
     if isinstance(input_string, str):
         input_string = input_string.lower()
         input_string = input_string.strip()
@@ -27,7 +27,7 @@ def normalize_string(input_string):
         return input_string
     return input_string
 
-def set_column_dtype(df, column_dtype_to_set):
+def set_column_dtype(df, column_dtype_to_set): #setea los tipos de datos de columnas
     for column, tipo in column_dtype_to_set.items():
         if column in df.columns:
             try:
@@ -41,7 +41,7 @@ def set_column_dtype(df, column_dtype_to_set):
                 )
     return df
 
-def boxplot_graph(df, columns_df, columns_number=3, figsize=(14, 10)):
+def boxplot_graph(df, columns_df, columns_number=3, figsize=(14, 10)): #grafica boxplots
     row_number = int(len(columns_df) / columns_number)
     left = len(columns_df) % columns_number
     
@@ -69,7 +69,7 @@ def boxplot_graph(df, columns_df, columns_number=3, figsize=(14, 10)):
     plt.tight_layout()
     plt.show()
 
-def boxplot_graph_multi_elements(df, columns_df, columns_number=3, figsize=(14, 10)):
+def boxplot_graph_multi_elements(df, columns_df, columns_number=3, figsize=(14, 10)): #grafica boxplots con hue
     row_number = int(len(columns_df) / columns_number)
     left = len(columns_df) % columns_number
     
@@ -97,7 +97,7 @@ def boxplot_graph_multi_elements(df, columns_df, columns_number=3, figsize=(14, 
     plt.tight_layout()
     plt.show()
 
-def graph_histogram(
+def graph_histogram( #grafica histogramas
     df,
     columns_df,
     columns_number=3,
@@ -185,18 +185,18 @@ def graph_histogram(
     plt.tight_layout()
     plt.show()
 
-def graph_comparison_histogram(df, kde=False, bins=5, rotations=None, figsize=(14, 10), column=None):
+def graph_comparison_histogram(df, kde=False, bins=5, rotations=None, figsize=(14, 10), column=None): #grafica histogramas con hue
     sns.histplot(data=df, kde=kde, bins=bins, x=column, hue="type", palette=sns.color_palette(('#722F37', '#dbdd46')))
     plt.tight_layout()
     plt.show()
 
-def graph_comparison_bargraph(df, figsize=(14, 10), column=None):
+def graph_comparison_bargraph(df, figsize=(14, 10), column=None): #grafica con hue
     sns.histplot(data=df, x=column, hue="type", palette=sns.color_palette(('#722F37', '#dbdd46')))
     plt.tight_layout()
     plt.show()
 
 
-def graph_correlations(corr_red, corr_white, title, cmap='viridis'):
+def graph_correlations(corr_red, corr_white, title, cmap='viridis'): #grafica de correlaciones
     _, ax = plt.subplots(nrows=1, ncols=2, figsize=(20, 8))
     sns.heatmap(
         corr_red,
@@ -217,7 +217,7 @@ def graph_correlations(corr_red, corr_white, title, cmap='viridis'):
     plt.suptitle(title, fontsize=16)
     plt.show()
 
-def graph_dispersion(
+def graph_dispersion( #grafica dispersion
     df,
     columns_df,
     columns_number=3,
@@ -226,6 +226,7 @@ def graph_dispersion(
     rotations=None,
     figsize=(14, 10),
 ):
+    
     row_number = int(len(columns_df) / columns_number)
     left = len(columns_df) % columns_number
 
