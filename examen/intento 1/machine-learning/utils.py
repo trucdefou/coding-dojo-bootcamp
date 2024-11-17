@@ -190,6 +190,11 @@ def graph_comparison_histogram(df, kde=False, bins=5, rotations=None, figsize=(1
     plt.tight_layout()
     plt.show()
 
+def graph_comparison_bargraph(df, figsize=(14, 10), column=None):
+    sns.histplot(data=df, x=column, hue="type", palette=sns.color_palette(('#722F37', '#dbdd46')))
+    plt.tight_layout()
+    plt.show()
+
 
 def graph_correlations(corr_red, corr_white, title, cmap='viridis'):
     _, ax = plt.subplots(nrows=1, ncols=2, figsize=(20, 8))
@@ -212,4 +217,47 @@ def graph_correlations(corr_red, corr_white, title, cmap='viridis'):
     plt.suptitle(title, fontsize=16)
     plt.show()
 
+def graph_dispersion(
+    df,
+    columns_df,
+    columns_number=3,
+    bins=5,
+    kde=False,
+    rotations=None,
+    figsize=(14, 10),
+):
+    row_number = int(len(columns_df) / columns_number)
+    left = len(columns_df) % columns_number
+
+    if left > 0:
+        row_number += 1
+
+    _, axes = plt.subplots(nrows=row_number, ncols=columns_number, figsize=figsize)
+
+    i_actual = 0
+    j_actual = 0
+
+    for column in columns_df:
+        if row_number == 1:
+            ax = axes[j_actual]
+        else:
+            ax = axes[i_actual][j_actual]
+
+        sns.relplot(data=df, kde=kde, bins=bins, ax=ax, x=column, hue="type", palette=sns.color_palette(('#722F37', '#dbdd46')))
+
+        ax.set_title(f"Histograma {column}")
+        ax.set_xlabel(column)
+        ax.set_ylabel("Freq.")
+
+        if rotations is not None and column in rotations:
+            ax.tick_params(axis='x', rotation=rotations[column])
+
+        j_actual += 1
+
+        if j_actual >= columns_number:
+            i_actual += 1
+            j_actual = 0
+
+    plt.tight_layout()
+    plt.show()
 
