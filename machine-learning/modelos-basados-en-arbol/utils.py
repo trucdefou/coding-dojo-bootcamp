@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+
+def variation_coefficient(series):
+    return series.std() / series.mean()
 def get_nulll_data_info(df): #obtiene los datos nulos en el dataset
     qsna = df.shape[0] - df.isnull().sum(axis=0)
     qna = df.isnull().sum(axis=0)
@@ -11,6 +14,12 @@ def get_nulll_data_info(df): #obtiene los datos nulos en el dataset
     na = pd.DataFrame(data=aux)
 
     return na.sort_values(by='Na en %', ascending=False)
+
+def clean_not_float_values(x):
+    try:
+        return float(x)
+    except ValueError:
+        return np.nan
 
 def get_numeric_columns(df): #retorna columnas numericas
     return df.select_dtypes(include=[np.number]).columns.tolist()
@@ -184,3 +193,22 @@ def check_if_column_is_numeric(df, column):
             cantidad += 1
             finvalido.append(i)
     print("Se encontraron ", cantidad, "valores inválidos en las filas ,", finvalido)
+
+def get_descriptive_statistics(df, num_decimales=None):
+    campos_numericos = get_numeric_columns(df)
+
+    estadisticas = df[[*campos_numericos]].agg(
+        [
+            "min",
+            "max",
+            "mean",
+            "std",
+            "median",
+            variation_coefficient,
+        ]
+    )
+
+    if num_decimales is not None:
+        estadisticas = estadisticas.round(2)
+
+    return estadisticas
